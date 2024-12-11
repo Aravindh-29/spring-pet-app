@@ -1,0 +1,23 @@
+FROM amazoncorretto:17
+LABEL author="Aravindh"
+
+# Create directory, change ownership, and update system packages
+RUN mkdir /spc && chown nobody /spc && \
+    yum update -y && \
+    yum install -y git
+
+# Switch to 'nobody' user
+USER nobody
+
+# Set working directory
+WORKDIR /spc
+
+# Clone the repository
+ARG download_url="https://github.com/Aravindh-29/spring-pet-app.git"
+RUN git clone ${download_url}
+
+# Expose port 8080 for the app
+EXPOSE 8080
+
+# Run the Java application (make sure the JAR is in the correct location)
+CMD ["java", "-jar", "/spc/spring-pet-app/spring-petclinic-3.4.0-SNAPSHOT.jar"]
